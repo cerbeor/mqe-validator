@@ -34,7 +34,7 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
   private static final int MONTHS_24 = 25;
   private static final int MONTHS_18 = 19;
   private static final int MONTHS_15 = 16;
-  public static final String SUPPORTING_DATA_SET = "supporting-data-4.65-508";
+  public static final String SUPPORTING_DATA_SET = "USA-DEMO-HPV9-0.1.zip";
 
   public VaccineEvaluation() {
 
@@ -292,35 +292,6 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
         // Filtering invalid doses from count and from detections
 
         List<AntigenAdministeredRecord> antigenAdministeredRecords = dataModel.getAntigenAdministeredRecordList();
-//        int cc = 0;
-//        for (AntigenAdministeredRecord dr : antigenAdministeredRecords) {
-////          printAllFields(dr);
-//          VaccineDoseAdministered vda = dr.getVaccineDoseAdministered();
-////          printAllFields(vda);
-//          TargetDose dose = vda.getTargetDose();
-////          System.out.println(vda.getTargetDose().getTargetDoseStatus());
-////          printAllFields(vda.getTargetDose().getTargetDoseStatus());
-//          if (dose != null) {
-//            printAllFields(dose);
-//            System.out.println(vda.getTargetDose().getTargetDoseStatus());
-//            if (dose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-//              System.out.println("==== AntigenAdministeredRecord " + cc++ + " ====");
-//              DateTime adminDate = new DateTime(dose.getEvaluation().getVaccineDoseAdministered().getDateAdministered());
-//              for (int i = 0; i < MONTHS.length; i++) {
-//                Integer month = MONTHS[i];
-//                DateTime age = birthDate.plusMonths(month);
-//                Map<String, Integer> countEvalMap = countEvalMapList.get(month);
-//                if (month == 0 || adminDate.isBefore(age)) {
-//                  String forecastCode = dose.getTrackedSeriesDose().getAntigenSeries().getTargetDisease().getName();
-//                  Integer count = countEvalMap.getOrDefault(forecastCode, 0);
-//                  countEvalMap.put(forecastCode, count + 1);
-//                }
-//              }
-//            } else if (dose.getTargetDoseStatus().equals(TargetDoseStatus.NOT_SATISFIED)) {
-////              invalidDoseCount++;
-//            }
-//          }
-//        }
         List<PatientSeries> patientSeriesList = dataModel.getBestPatientSeriesList();
         for (PatientSeries patientSeries : patientSeriesList) {
           System.out.println("Patient Series all doses size " + patientSeries.getTargetDoseList().size());
@@ -526,6 +497,27 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
   }
 
   private static @NonNull DataModel executeForecasting(ForecastInput forecastInput) {
+    try {
+      return executeForecastingOnce(forecastInput);
+    } catch (Exception e) {
+      // Clean the input of whatever failed and retry.
+      List<ForecastInput.VaccinationInput> inputs =
+          new ArrayList<>(forecastInput.getVaccinationList());
+      for (int i = inputs.size() - 1; i >= 0; i--) {
+        ForecastInput.VaccinationInput candidate = inputs.get(i);
+        forecastInput.getVaccinationList().remove(candidate);
+        try {
+          return executeForecasting(forecastInput);
+        } catch (Exception ex) {
+          // Restore this input and try removing a different one.
+          forecastInput.getVaccinationList().add(i, candidate);
+        }
+      }
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static @NonNull DataModel executeForecastingOnce(ForecastInput forecastInput) {
     DataModel dataModel = null;
     try {
       List<String> names = DataModelLoader.listBundledSupportingDataZipNames();
@@ -535,27 +527,36 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
     }
     dataModel.setForecastInput(forecastInput);
     LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
-    dataModel.setNextLogicStep(
-            LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
+
+    // Execute the first step separately so its exception handling can differ:
+    // on failure the caller cleans the offending input and retries.
+    try {
+      LogicStep firstStep =
+          LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
+      dataModel.setNextLogicStep(firstStep.process());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
-        LogicStep nextLogicStep = null;
-        try {
-            nextLogicStep = dataModel.getLogicStep().process();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+      LogicStep nextLogicStep = null;
+      try {
+        nextLogicStep = dataModel.getLogicStep().process();
         dataModel.setNextLogicStep(nextLogicStep);
-      count++;
-      if (count > 100000) {
-        System.err.println(
-                "Appear to be caught in a loop at this step: " + dataModel.getLogicStep().getTitle());
-        // too many steps!
-        if (count > 100100) {
-          throw new RuntimeException(
-                  "Logic steps seem to be caught in a loop, " + dataModel.getLogicStep().getTitle()
-                          + ", unable to get results");
+        count++;
+        if (count > 100000) {
+          System.err.println(
+                  "Appear to be caught in a loop at this step: " + dataModel.getLogicStep().getTitle());
+          // too many steps!
+          if (count > 100100) {
+            throw new RuntimeException(
+                    "Logic steps seem to be caught in a loop, " + dataModel.getLogicStep().getTitle()
+                            + ", unable to get results");
+          }
         }
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     }
     return dataModel;
