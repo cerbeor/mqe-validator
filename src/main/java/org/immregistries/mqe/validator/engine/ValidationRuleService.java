@@ -17,23 +17,46 @@ public class ValidationRuleService {
         Create ValidationRuleHolder from All MQE Rules
      */
     public static ValidationRuleHolder getAllMqeRules() {
-        return new ValidationRuleHolder(
-                ValidationRuleEntityLists.PATIENT_RULES.getRules(),
-                ValidationRuleEntityLists.VACCINATION_RULES.getRules(),
-                ValidationRuleEntityLists.MESSAGE_HEADER_RULES.getRules(),
-                ValidationRuleEntityLists.NEXT_OF_KIN_RULES.getRules()
-        );
+        return getAllMqeRules(java.util.Collections.emptySet());
+    }
+
+    public static ValidationRuleHolder getAllMqeRules(Set<Class<? extends ValidationRule>> disabledRules) {
+        Set<ValidationRule> patient = new HashSet<>(ValidationRuleEntityLists.PATIENT_RULES.getRules());
+        Set<ValidationRule> vaccination = new HashSet<>(ValidationRuleEntityLists.VACCINATION_RULES.getRules());
+        Set<ValidationRule> messageHeader = new HashSet<>(ValidationRuleEntityLists.MESSAGE_HEADER_RULES.getRules());
+        Set<ValidationRule> nextOfKin = new HashSet<>(ValidationRuleEntityLists.NEXT_OF_KIN_RULES.getRules());
+
+        if (disabledRules != null && !disabledRules.isEmpty()) {
+            patient.removeIf(r -> disabledRules.contains(r.getClass()));
+            vaccination.removeIf(r -> disabledRules.contains(r.getClass()));
+            messageHeader.removeIf(r -> disabledRules.contains(r.getClass()));
+            nextOfKin.removeIf(r -> disabledRules.contains(r.getClass()));
+        }
+
+        return new ValidationRuleHolder(patient, vaccination, messageHeader, nextOfKin);
     }
 
     /*
         Create ValidationRuleHolder from rules that return a detections in input detections set (+ their dependencies)
      */
     public static ValidationRuleHolder getRulesForMqeCodes(Set<MqeCode> detections) {
+        return getRulesForMqeCodes(detections, java.util.Collections.emptySet());
+    }
+
+    public static ValidationRuleHolder getRulesForMqeCodes(Set<MqeCode> detections,
+            Set<Class<? extends ValidationRule>> disabledRules) {
         // Filter all rules and keep only the ones that return detections of interest
         Set<ValidationRule> patient = filterRules(ValidationRuleEntityLists.PATIENT_RULES.getRules(), detections);
         Set<ValidationRule> vaccination = filterRules(ValidationRuleEntityLists.VACCINATION_RULES.getRules(), detections);
         Set<ValidationRule> messageHeader = filterRules(ValidationRuleEntityLists.MESSAGE_HEADER_RULES.getRules(), detections);
         Set<ValidationRule> nextOfKin = filterRules(ValidationRuleEntityLists.NEXT_OF_KIN_RULES.getRules(), detections);
+
+        if (disabledRules != null && !disabledRules.isEmpty()) {
+            patient.removeIf(r -> disabledRules.contains(r.getClass()));
+            vaccination.removeIf(r -> disabledRules.contains(r.getClass()));
+            messageHeader.removeIf(r -> disabledRules.contains(r.getClass()));
+            nextOfKin.removeIf(r -> disabledRules.contains(r.getClass()));
+        }
 
         // Create ValidationRuleHolder
         ValidationRuleHolder validationRuleHolder = new ValidationRuleHolder(
