@@ -125,6 +125,26 @@ public class VaccineEvaluationComparisonTester {
     assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
   }
 
+  @Test
+  public void allInvalidScenarioMatches() {
+    // reset patient/message between scenarios
+    mr = new MqeMessageReceived();
+    p = new MqePatient();
+    mr.setPatient(p);
+
+    List<MqeVaccination> vaccinations = createWrongPatientVaccinations();
+    mr.setVaccinations(vaccinations);
+
+    ValidationRuleResult rNew = newRule.executeRule(p, mr);
+    ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
+
+    logger.info("NEW:    " + rNew.getValidationDetections());
+    logger.info("LEGACY: " + rLegacy.getValidationDetections());
+
+    assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
+  }
+
   private Set<String> detectionKeySet(ValidationRuleResult r) {
     Set<String> keys = new HashSet<>();
     for (ValidationReport vr : r.getValidationDetections()) {
@@ -135,6 +155,23 @@ public class VaccineEvaluationComparisonTester {
 
   // ---- reused data builders (mirrored from VaccineEvaluationTester) ----
 
+  private List<MqeVaccination> createWrongPatientVaccinations() {
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.YEAR, -10);
+
+    p.setBirthDate(cal.getTime());
+    List<MqeVaccination> vaccinations = new ArrayList<>();
+
+
+    cal.add(Calendar.MONTH, 2);
+    addVaccination("0157", vaccinations, cal);
+    cal.add(Calendar.MONTH, 2);
+    addVaccination("notAcvx", vaccinations, cal);
+    cal.add(Calendar.MONTH, 2);
+    addVaccination("066", vaccinations, cal);
+    return vaccinations;
+  }
+
   private List<MqeVaccination> createPatientVaccinations(boolean allVaccines) {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.YEAR, -10);
@@ -144,6 +181,8 @@ public class VaccineEvaluationComparisonTester {
     if (allVaccines) {
       addVaccination("08", vaccinations, cal); // Hep B at Birth
     }
+
+    addVaccination("0157", vaccinations, cal); // Invalid one dose to che
 
     cal.add(Calendar.MONTH, 2);
     if (allVaccines) {
