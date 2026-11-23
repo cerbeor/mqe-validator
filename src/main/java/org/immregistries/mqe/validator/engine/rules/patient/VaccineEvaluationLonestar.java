@@ -296,9 +296,9 @@ public class VaccineEvaluationLonestar extends ValidationRule<MqePatient> {
                     Map<String, Integer> countEvalMap = new HashMap<>();
                     countEvalMapList.put(MONTHS[i], countEvalMap);
                 }
-                int pp = 0;
+                int countForLog = 0;
                 for (VaccinationDoseDataBean dose : forecastInput.doseList) {
-                    System.out.println("Lonestar count " + pp++);
+                    countForLog++;
                     if (dose.getStatusCode().equals(VaccinationDoseDataBean.STATUS_VALID)) {
                         DateTime adminDate = new DateTime(dose.getAdminDate());
                         for (int i = 0; i < MONTHS.length; i++) {
@@ -311,7 +311,7 @@ public class VaccineEvaluationLonestar extends ValidationRule<MqePatient> {
                             }
                         }
                     } else if (dose.getStatusCode().equals(VaccinationDoseDataBean.STATUS_INVALID)) {
-                        System.out.println("=== Lonestar invalid dose " + invalidDoseCount  + " number " + pp + " ===");
+                        System.out.println("=== Lonestar invalid dose " + invalidDoseCount  + ", global count " + countForLog + " ===");
                         printAllFields(dose);
                         invalidDoseCount++;
                     }
