@@ -20,9 +20,7 @@ import org.joda.time.DateTime;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
-import org.openimmunizationsoftware.cdsi.core.data.InvalidInputException;
 import org.openimmunizationsoftware.cdsi.core.domain.*;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
@@ -300,12 +298,8 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
 
         List<AntigenAdministeredRecord> antigenAdministeredRecords = dataModel.getAntigenAdministeredRecordList();
         List<PatientSeries> patientSeriesList = dataModel.getBestPatientSeriesList();
-        int targetDoseTotalCount = 0;
-        int targetDoseTotalInvalidCount = 0;
         for (PatientSeries patientSeries : patientSeriesList) {
           List<TargetDose> targetDoseList = patientSeries.getTargetDoseList();
-          targetDoseTotalCount += targetDoseList.size();
-          targetDoseTotalInvalidCount += targetDoseList.size() - patientSeries.getValidDoseCount();
           for (TargetDose dose : targetDoseList) {
             if (dose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
               DateTime adminDate = new DateTime(dose.getEvaluation().getVaccineDoseAdministered().getDateAdministered());
@@ -322,18 +316,13 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
             }
           }
         }
-        System.out.println("StepIntoCDSI calculus total target dose evaluated: " +  targetDoseTotalCount + " invalids:  " + targetDoseTotalInvalidCount);
-        List<ForecastInput.VaccinationInput> test = new ArrayList<>(forecastInput.getVaccinationList());
-        test.removeAll(dataModel.getSatisfiedVaccinationInputList());
-//        for( ForecastInput.VaccinationInput vaccinationInput : dataModel.getSatisfiedVaccinationInputList()) {
+        List<ForecastInput.VaccinationInput> invalidDoses = new ArrayList<>(forecastInput.getVaccinationList());
+        invalidDoses.removeAll(dataModel.getSatisfiedVaccinationInputList());
+        invalidDoseCount = invalidDoses.size();
+//        System.out.println("=== Invalid VaccinationInputs StepIntoCDSI summary ===");
+//        for (ForecastInput.VaccinationInput vaccinationInput : invalidDoses) {
 //          printAllFields(vaccinationInput);
 //        }
-        invalidDoseCount = test.size();
-        invalidDoseCount = targetDoseTotalInvalidCount;
-        System.out.println("=== Invalid VaccinationInputs StepIntoCDSI summary ===");
-        for (ForecastInput.VaccinationInput vaccinationInput : test) {
-          printAllFields(vaccinationInput);
-        }
         System.out.println("===== Step Into CDSI SUMMARY ======");
         System.out.println("Size of all inputs " + forecastInput.getVaccinationList().size());
         System.out.println("Marked Valid " + dataModel.getSatisfiedVaccinationInputList().size());
@@ -506,29 +495,6 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
   }
 
   private static @NonNull DataModel executeForecasting(ForecastInput forecastInput) {
-//    try {
-      return executeForecastingOnce(forecastInput);
-//    } catch (InvalidInputException e) {
-////      e.printStackTrace();
-//      // Clean the input of whatever failed and retry.
-//      List<ForecastInput.VaccinationInput> inputs =
-//          new ArrayList<>(forecastInput.getVaccinationList());
-//      for (int i = inputs.size() - 1; i >= 0; i--) {
-//        ForecastInput.VaccinationInput candidate = inputs.get(i);
-//        forecastInput.getVaccinationList().remove(candidate);
-//        try {
-//          return executeForecastingOnce(forecastInput);
-//        } catch (RuntimeException ex) {
-//          ex.printStackTrace();
-//          // Restore this input and try removing a different one.
-//          forecastInput.getVaccinationList().add(i, candidate);
-//        }
-//      }
-//      throw new RuntimeException(e);
-//    }
-  }
-
-  private static @NonNull DataModel executeForecastingOnce(ForecastInput forecastInput) {
     DataModel dataModel = null;
     try {
       List<String> names = DataModelLoader.listBundledSupportingDataZipNames();
@@ -537,15 +503,12 @@ public class VaccineEvaluation extends ValidationRule<MqePatient> {
       throw new RuntimeException(e);
     }
     dataModel.setForecastInput(forecastInput);
-//    LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA_FOR_VALIDATION, dataModel);
     LogicStep firstStep =
           LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA_FOR_VALIDATION, dataModel);
     // Execute the first step separately so its exception handling can differ:
     // on failure the caller cleans the offending input and retries.
     try {
       dataModel.setNextLogicStep(firstStep.process());
-//    } catch (InvalidInputException invalidInputException) {
-//      throw invalidInputException;
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
