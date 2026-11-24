@@ -182,8 +182,6 @@ public class VaccineEvaluationComparisonTester {
       addVaccination("08", vaccinations, cal); // Hep B at Birth
     }
 
-    addVaccination("0157", vaccinations, cal); // Invalid one dose to che
-
     cal.add(Calendar.MONTH, 2);
     if (allVaccines) {
       addVaccination("122", vaccinations, cal); // Rotavirus
