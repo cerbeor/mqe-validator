@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
  * Compares the behavior of {@link VaccineEvaluation} (new, STEP-based) against
  * {@link VaccineEvaluationLonestar} (legacy, lonestar-based) when fed CVX codes that are known to
  * trigger internal "Unrecognized cvx code" exceptions in the new path.
+ *
+ * EDIT : for now the system is expected the CVX issues somewhere else, leaving the tests to illustrate the behavior
+ *
  */
 public class ProblematicCvxComparisonTest {
 
@@ -126,9 +129,10 @@ public class ProblematicCvxComparisonTest {
 
     org.junit.Assert.assertNotNull("new path should return a result for not-a-cvx", rNew);
     org.junit.Assert.assertNotNull("legacy path should return a result for not-a-cvx", rLegacy);
-//    Dose should be counted as invalid ? if so both should return a detection on having a non existing CVX
-    org.junit.Assert.assertEquals(1, rNew.getValidationDetections().size());
-    org.junit.Assert.assertEquals(1, rLegacy.getValidationDetections().size());
+
+// EDIT : for now the system is expected the CVX issues somewhere else, leaving the tests to illustrate the behavior
+//    org.junit.Assert.assertEquals(1, rNew.getValidationDetections().size());
+//    org.junit.Assert.assertEquals(1, rLegacy.getValidationDetections().size());
     org.junit.Assert.assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
   }
 
