@@ -51,6 +51,11 @@ public class CvxExceptionProbeTest {
     return mr;
   }
 
+  /**
+   * Problematic CVX codes (those that make the underlying CDSI engine raise
+   * "Unrecognized cvx code") must not propagate an exception out of VaccineEvaluation;
+   * the rule is expected to complete and return a non-null result.
+   */
   @Test
   public void problematicCvxDoesNotThrow() {
     for (String cvx : PROBLEMATIC_CVX_LIST) {
@@ -65,6 +70,9 @@ public class CvxExceptionProbeTest {
     }
   }
 
+  /**
+   * Common CVX codes that the CDSI engine recognizes must not propagate an exception.
+   */
   @Test
   public void okCvxDoesNotThrow() {
     for (String cvx : OK_CVX_LIST) {
@@ -79,6 +87,10 @@ public class CvxExceptionProbeTest {
     }
   }
 
+  /**
+   * When all problematic CVX codes are submitted together, VaccineEvaluation must still
+   * complete without propagating an exception.
+   */
   @Test
   public void combinedProblematicCvxListDoesNotThrow() {
     MqeMessageReceived mr = new MqeMessageReceived();

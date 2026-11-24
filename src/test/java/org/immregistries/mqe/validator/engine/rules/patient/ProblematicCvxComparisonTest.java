@@ -25,8 +25,10 @@ public class ProblematicCvxComparisonTest {
   private static final Logger logger =
       LoggerFactory.getLogger(ProblematicCvxComparisonTest.class);
 
+  private static final String NOT_A_CVX = "not-a-cvx";
+
   private static final String[] PROBLEMATIC_CVX_LIST = {
-      "66", "69", "78", "86", "128", "157", "vihbrhfbib"
+      "66", "69", "78", "86", "128", "157"
   };
 
   /**
@@ -48,11 +50,13 @@ public class ProblematicCvxComparisonTest {
       Throwable tNew = null;
       Throwable tLegacy = null;
 
+      // Run the new STEP-based implementation, capturing any thrown exception.
       try {
         rNew = newRule.executeRule(mrNew.getPatient(), mrNew);
       } catch (Throwable t) {
         tNew = t;
       }
+      // Run the legacy lonestar-based implementation, capturing any thrown exception.
       try {
         rLegacy = legacyRule.executeRule(mrLegacy.getPatient(), mrLegacy);
       } catch (Throwable t) {
@@ -83,11 +87,13 @@ public class ProblematicCvxComparisonTest {
 
       boolean newThrew = false;
       boolean legacyThrew = false;
+      // Track whether the new implementation throws for this CVX.
       try {
         newRule.executeRule(mrNew.getPatient(), mrNew);
       } catch (Throwable t) {
         newThrew = true;
       }
+      // Track whether the legacy implementation throws for this CVX.
       try {
         legacyRule.executeRule(mrLegacy.getPatient(), mrLegacy);
       } catch (Throwable t) {
@@ -97,6 +103,33 @@ public class ProblematicCvxComparisonTest {
       logger.info("CVX " + cvx + " newThrew=" + newThrew + " legacyThrew=" + legacyThrew);
       assertEquals("throw behavior should match for CVX " + cvx, newThrew, legacyThrew);
     }
+  }
+
+  /**
+   * Ensures that a non-CVX code ("not-a-cvx") is rejected by both the new (STEP-based) and
+   * legacy (lonestar-based) VaccineEvaluation implementations: it must not be fed into the
+   * forecast, so neither path should report invalid-dose detections for it.
+   */
+  @Test
+  public void notACvxIsRejectedByBoth() {
+    MqeMessageReceived mrNew = buildMessage(NOT_A_CVX);
+    MqeMessageReceived mrLegacy = buildMessage(NOT_A_CVX);
+
+    VaccineEvaluation newRule = new VaccineEvaluation();
+    VaccineEvaluationLonestar legacyRule = new VaccineEvaluationLonestar();
+
+    ValidationRuleResult rNew = newRule.executeRule(mrNew.getPatient(), mrNew);
+    ValidationRuleResult rLegacy = legacyRule.executeRule(mrLegacy.getPatient(), mrLegacy);
+
+    logger.info("NOT_A_CVX NEW detections:    " + rNew.getValidationDetections());
+    logger.info("NOT_A_CVX LEGACY detections: " + rLegacy.getValidationDetections());
+
+    org.junit.Assert.assertNotNull("new path should return a result for not-a-cvx", rNew);
+    org.junit.Assert.assertNotNull("legacy path should return a result for not-a-cvx", rLegacy);
+//    Dose should be counted as invalid ? if so both should return a detection on having a non existing CVX
+    org.junit.Assert.assertEquals(1, rNew.getValidationDetections().size());
+    org.junit.Assert.assertEquals(1, rLegacy.getValidationDetections().size());
+    org.junit.Assert.assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
   }
 
   private MqeMessageReceived buildMessage(String cvx) {
