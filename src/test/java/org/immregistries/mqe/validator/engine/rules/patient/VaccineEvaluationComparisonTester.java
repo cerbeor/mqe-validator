@@ -208,6 +208,108 @@ public class VaccineEvaluationComparisonTester {
     }
   }
 
+  @Test
+  public void timeShiftScenarioMatches() {
+    List<MqeVaccination> original = createPatientVaccinations(true);
+    java.util.Date originalBirth = p.getBirthDate();
+    Set<String> baseline = null;
+    for (int shift : new int[] {-6, 0, 6}) {
+      mr = new MqeMessageReceived();
+      p = new MqePatient();
+      mr.setPatient(p);
+
+      Calendar bc = Calendar.getInstance();
+      bc.setTime(originalBirth);
+      bc.add(Calendar.HOUR, shift);
+      p.setBirthDate(bc.getTime());
+
+      List<MqeVaccination> shifted = new ArrayList<>();
+      for (MqeVaccination v : original) {
+        MqeVaccination nv = new MqeVaccination();
+        nv.setAdminCvxCode(v.getAdminCvxCode());
+        nv.setAdminDateString(shiftDateString(v.getAdminDateString(), shift));
+        shifted.add(nv);
+      }
+      mr.setVaccinations(shifted);
+
+      ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+      ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
+      ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
+
+      logger.info("TIME SHIFT " + shift + " STEP:    " + rStep.getValidationDetections());
+
+      assertEquals("passed flag should match for shift " + shift,
+          rLonestar.isRulePassed(), rStep.isRulePassed());
+      assertEquals("detection sets should match for shift " + shift,
+          detectionKeySet(rLonestar), detectionKeySet(rStep));
+
+      Set<String> ks = detectionKeySet(rStep);
+      if (baseline == null) {
+        baseline = ks;
+      } else {
+        assertEquals("detection sets should be stable across time shifts",
+            baseline, ks);
+      }
+    }
+  }
+
+  private String shiftDateString(String yyyymmdd, int hours) {
+    try {
+      Calendar c = Calendar.getInstance();
+      c.setTime(dateFormat.parse(yyyymmdd));
+      c.add(Calendar.HOUR, hours);
+      return dateFormat.format(c.getTime());
+    } catch (java.text.ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Test
+  public void timeShiftEachImplementationScenarioMatches() {
+    List<MqeVaccination> original = createPatientVaccinations(true);
+    java.util.Date originalBirth = p.getBirthDate();
+
+    Set<String> baseStep = null, baseLonestar = null, baseLegacy = null;
+    for (int shift : new int[] {-12, 0, 12}) {
+      mr = new MqeMessageReceived();
+      p = new MqePatient();
+      mr.setPatient(p);
+
+      Calendar bc = Calendar.getInstance();
+      bc.setTime(originalBirth);
+      bc.add(Calendar.HOUR, shift);
+      p.setBirthDate(bc.getTime());
+
+      List<MqeVaccination> shifted = new ArrayList<>();
+      for (MqeVaccination v : original) {
+        MqeVaccination nv = new MqeVaccination();
+        nv.setAdminCvxCode(v.getAdminCvxCode());
+        nv.setAdminDateString(shiftDateString(v.getAdminDateString(), shift));
+        shifted.add(nv);
+      }
+      mr.setVaccinations(shifted);
+
+      ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+      ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
+      ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
+
+      Set<String> ks = detectionKeySet(rStep);
+      Set<String> kl = detectionKeySet(rLonestar);
+      Set<String> kleg = detectionKeySet(rLegacy);
+
+      if (baseStep == null) {
+        baseStep = ks; baseLonestar = kl; baseLegacy = kleg;
+      } else {
+        assertEquals("step detection sets should be stable across time shifts",
+            baseStep, ks);
+        assertEquals("lonestar detection sets should be stable across time shifts",
+            baseLonestar, kl);
+        assertEquals("legacy detection sets should be stable across time shifts",
+            baseLegacy, kleg);
+      }
+    }
+  }
+
   private Set<String> detectionKeySet(ValidationRuleResult r) {
     Set<String> keys = new HashSet<>();
     for (ValidationReport vr : r.getValidationDetections()) {
@@ -242,15 +344,12 @@ public class VaccineEvaluationComparisonTester {
     // birth
     p.setBirthDate(cal.getTime());
     List<MqeVaccination> vaccinations = new ArrayList<>();
-//    cal.add(Calendar.DAY_OF_YEAR, 1);
     if (allVaccines) {
       addVaccination("08", vaccinations, cal); // Hep B at Birth
     }
 
     // 2 months
     cal.add(Calendar.MONTH, 2);
-//    cal.add(Calendar.DAY_OF_YEAR, 3);
-//    cal.add(Calendar.DAY_OF_MONTH, 3);
     if (allVaccines) {
       addVaccination("122", vaccinations, cal); // Rotavirus
       addVaccination("20", vaccinations, cal); // DTaP
@@ -273,7 +372,6 @@ public class VaccineEvaluationComparisonTester {
 
     // 6 months
     cal.add(Calendar.MONTH, 2);
-//    cal.add(Calendar.DAY_OF_YEAR, 3);
     if (allVaccines) {
       addVaccination("122", vaccinations, cal); // Rotavirus
       addVaccination("20", vaccinations, cal); // DTaP

@@ -34,7 +34,7 @@ public class VaccineEvaluationTester {
 	private static final String POLIO = "Polio";
 	private static final String SERIES_4_3_1_3_3_1_4 = "Series4:3:1:3:3:1:4";
 
-	private VaccineEvaluationLonestar rule = new VaccineEvaluationLonestar();
+	private VaccineEvaluation rule = new VaccineEvaluationStepIntoCDSi();
 
 	private MqeMessageReceived mr = new MqeMessageReceived();
 	private MqePatient p = new MqePatient();
@@ -69,6 +69,7 @@ public class VaccineEvaluationTester {
 		logger.info(r.getValidationDetections().toString());
 		assertTrue(r.isRulePassed());
 		Set<String> foundVaccineSet = createFoundSet(r);
+		System.out.println(foundVaccineSet);
 		assertTrue(foundVaccineSet.contains(POLIO));
 		assertTrue(foundVaccineSet.contains(HEP_B));
 		assertTrue(foundVaccineSet.contains(DTAP));
