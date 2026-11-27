@@ -156,6 +156,58 @@ public class VaccineEvaluationComparisonTester {
     assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rStep));
   }
 
+  @Test
+  public void identifiedDifferencesScenarioMatches() {
+    // reset patient/message between scenarios
+    mr = new MqeMessageReceived();
+    p = new MqePatient();
+    mr.setPatient(p);
+
+    List<MqeVaccination> vaccinations = createIdentifiedDifferencesVaccinations();
+    mr.setVaccinations(vaccinations);
+
+    ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+    ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
+    ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
+
+    logger.info("NEW STEPINTOCDSI:    " + rStep.getValidationDetections());
+    logger.info("LEGACY LONESTAR: " + rLegacy.getValidationDetections());
+    logger.info("NEW LONESTAR: " + rLonestar.getValidationDetections());
+
+    assertEquals("passed flag should match", rLonestar.isRulePassed(), rStep.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rStep));
+  }
+
+  @Test
+  public void singleCvxSeriesScenarioMatches() {
+    String[] cvxCodes = {"08", "20", "10", "17", "122", "133", "94", "83"};
+    for (String cvx : cvxCodes) {
+      List<MqeVaccination> all = createPatientVaccinations(true);
+      mr = new MqeMessageReceived();
+      mr.setPatient(p);
+      List<MqeVaccination> subset = new ArrayList<>();
+      for (MqeVaccination v : all) {
+        if (cvx.equals(v.getAdminCvxCode())) {
+          subset.add(v);
+        }
+      }
+      mr.setVaccinations(subset);
+
+      ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+      ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
+      ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
+
+      logger.info("SINGLE CVX " + cvx + " STEP:    " + rStep.getValidationDetections());
+      logger.info("SINGLE CVX " + cvx + " LONESTAR: " + rLonestar.getValidationDetections());
+      logger.info("SINGLE CVX " + cvx + " LEGACY: " + rLegacy.getValidationDetections());
+
+      assertEquals("passed flag should match for cvx " + cvx,
+          rLonestar.isRulePassed(), rStep.isRulePassed());
+      assertEquals("detection sets should match for cvx " + cvx,
+          detectionKeySet(rLonestar), detectionKeySet(rStep));
+    }
+  }
+
   private Set<String> detectionKeySet(ValidationRuleResult r) {
     Set<String> keys = new HashSet<>();
     for (ValidationReport vr : r.getValidationDetections()) {
@@ -190,12 +242,15 @@ public class VaccineEvaluationComparisonTester {
     // birth
     p.setBirthDate(cal.getTime());
     List<MqeVaccination> vaccinations = new ArrayList<>();
+//    cal.add(Calendar.DAY_OF_YEAR, 1);
     if (allVaccines) {
       addVaccination("08", vaccinations, cal); // Hep B at Birth
     }
 
     // 2 months
     cal.add(Calendar.MONTH, 2);
+//    cal.add(Calendar.DAY_OF_YEAR, 3);
+//    cal.add(Calendar.DAY_OF_MONTH, 3);
     if (allVaccines) {
       addVaccination("122", vaccinations, cal); // Rotavirus
       addVaccination("20", vaccinations, cal); // DTaP
@@ -218,6 +273,7 @@ public class VaccineEvaluationComparisonTester {
 
     // 6 months
     cal.add(Calendar.MONTH, 2);
+//    cal.add(Calendar.DAY_OF_YEAR, 3);
     if (allVaccines) {
       addVaccination("122", vaccinations, cal); // Rotavirus
       addVaccination("20", vaccinations, cal); // DTaP
@@ -258,6 +314,33 @@ public class VaccineEvaluationComparisonTester {
   private void addVaccination(String cvxCode, List<MqeVaccination> vaccinations, Calendar cal) {
     MqeVaccination tmp = new MqeVaccination();
     tmp.setAdminDateString(dateFormat.format(cal.getTime()));
+    tmp.setAdminCvxCode(cvxCode);
+    vaccinations.add(tmp);
+  }
+
+  private List<MqeVaccination> createIdentifiedDifferencesVaccinations() {
+    // birth date inferred from legacy "Dose 1 valid at birth, 11/27/2016"
+    p.setBirthDate(parseDate("20161127"));
+    List<MqeVaccination> vaccinations = new ArrayList<>();
+    addVaccinationByDate("08", "20161127", vaccinations); // Hep B at birth
+    addVaccinationByDate("20", "20181027", vaccinations); // DTaP
+    addVaccinationByDate("20", "20201027", vaccinations); // DTaP
+    addVaccinationByDate("10", "20180227", vaccinations); // IPV
+    addVaccinationByDate("10", "20181027", vaccinations); // IPV
+    return vaccinations;
+  }
+
+  private java.util.Date parseDate(String yyyymmdd) {
+    try {
+      return dateFormat.parse(yyyymmdd);
+    } catch (java.text.ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void addVaccinationByDate(String cvxCode, String date, List<MqeVaccination> vaccinations) {
+    MqeVaccination tmp = new MqeVaccination();
+    tmp.setAdminDateString(date);
     tmp.setAdminCvxCode(cvxCode);
     vaccinations.add(tmp);
   }

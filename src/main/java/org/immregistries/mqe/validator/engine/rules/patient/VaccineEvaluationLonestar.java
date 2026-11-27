@@ -57,8 +57,8 @@ public class VaccineEvaluationLonestar extends VaccineEvaluationLegacy {
 //                        System.out.println(DoseInjectionTracer.trace(dose, notValidListSubtract).size());
                 notValidListSubtract.removeAll(DoseInjectionTracer.trace(dose, notValidListSubtract));
             } else if (dose.getStatusCode().equals(VaccinationDoseDataBean.STATUS_INVALID)) {
-//                        System.out.println("=== Lonestar invalid dose TEST " + ++invalidDoseCount  + " ===");
-//                        printAllFields(dose);
+                        System.out.println("=== Lonestar invalid dose TEST " + ++invalidDoseCount  + " ===");
+                        printAllFields(dose);
             } else {
                 notValidListSubtract.removeAll(DoseInjectionTracer.trace(dose, notValidListSubtract));
 //                        invalidDoseCount--;

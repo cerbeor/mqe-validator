@@ -108,8 +108,8 @@ public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluation
                 }
             } else if (dose.getStatusCode().equals(VaccinationDoseDataBean.STATUS_INVALID)) {
                 invalidDoseCount++;
-//                        System.out.println("==== LEGACY Invalid Dose " + invalidDoseCount  + " ====");
-//                        printAllFields(dose);
+                        System.out.println("==== LEGACY Invalid Dose " + invalidDoseCount  + " ====");
+                        printAllFields(dose);
             }
         }
         CountEvalMapAndInvalidDoseCount result = new CountEvalMapAndInvalidDoseCount(invalidDoseCount, countEvalMapList);
