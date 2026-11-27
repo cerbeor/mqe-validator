@@ -29,8 +29,9 @@ public class VaccineEvaluationComparisonTester {
   private static final Logger logger =
       LoggerFactory.getLogger(VaccineEvaluationComparisonTester.class);
 
-  private VaccineEvaluation newRule = new VaccineEvaluation();
-  private VaccineEvaluationLonestar legacyRule = new VaccineEvaluationLonestar();
+  private VaccineEvaluation stepRule = new VaccineEvaluation();
+  private VaccineEvaluationLonestar newLonestarRule = new VaccineEvaluationLonestar();
+  private VaccineEvaluationLegacy legacyRule = new VaccineEvaluationLegacy();
 
   private MqeMessageReceived mr = new MqeMessageReceived();
   private MqePatient p = new MqePatient();
@@ -46,14 +47,16 @@ public class VaccineEvaluationComparisonTester {
     List<MqeVaccination> vaccinations = createPatientVaccinations(true);
     mr.setVaccinations(vaccinations);
 
-    ValidationRuleResult rNew = newRule.executeRule(p, mr);
+    ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+    ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
     ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
 
-    logger.info("NEW:    " + rNew.getValidationDetections());
-    logger.info("LEGACY: " + rLegacy.getValidationDetections());
+    logger.info("NEW STEPINTOCDSI:    " + rStep.getValidationDetections());
+    logger.info("LEGACY LONESTAR: " + rLegacy.getValidationDetections());
+    logger.info("NEW LONESTAR: " + rLonestar.getValidationDetections());
 
-    assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
-    assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
+    assertEquals("passed flag should match", rLonestar.isRulePassed(), rStep.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rStep));
   }
 
   @Test
@@ -72,14 +75,16 @@ public class VaccineEvaluationComparisonTester {
     }
     mr.setVaccinations(subset);
 
-    ValidationRuleResult rNew = newRule.executeRule(p, mr);
+    ValidationRuleResult rNew = stepRule.executeRule(p, mr);
+    ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
     ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
 
-    logger.info("RANDOM SUBSET NEW:    " + rNew.getValidationDetections());
-    logger.info("RANDOM SUBSET LEGACY: " + rLegacy.getValidationDetections());
+    logger.info("RANDOM SUBSET NEW STEP:    " + rNew.getValidationDetections());
+    logger.info("RANDOM SUBSET NEW LONESTAR: " + rLonestar.getValidationDetections());
+    logger.info("RANDOM SUBSET LEGACY:    " + rLegacy.getValidationDetections());
 
-    assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
-    assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
+    assertEquals("passed flag should match", rLonestar.isRulePassed(), rNew.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rNew));
   }
 
   @Test
@@ -95,14 +100,16 @@ public class VaccineEvaluationComparisonTester {
     }
     mr.setVaccinations(everyOther);
 
-    ValidationRuleResult rNew = newRule.executeRule(p, mr);
+    ValidationRuleResult rNew = stepRule.executeRule(p, mr);
+    ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
     ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
 
-    logger.info("EVERY OTHER NEW:    " + rNew.getValidationDetections());
+    logger.info("EVERY OTHER NEW STEP:    " + rNew.getValidationDetections());
+    logger.info("EVERY OTHER NEW LONESTAR: " + rLonestar.getValidationDetections());
     logger.info("EVERY OTHER LEGACY: " + rLegacy.getValidationDetections());
 
-    assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
-    assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
+    assertEquals("passed flag should match", rLonestar.isRulePassed(), rNew.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rNew));
   }
 
   @Test
@@ -115,14 +122,16 @@ public class VaccineEvaluationComparisonTester {
     List<MqeVaccination> vaccinations = createPatientVaccinations(false);
     mr.setVaccinations(vaccinations);
 
-    ValidationRuleResult rNew = newRule.executeRule(p, mr);
+    ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+    ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
     ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
 
-    logger.info("NEW:    " + rNew.getValidationDetections());
-    logger.info("LEGACY: " + rLegacy.getValidationDetections());
+    logger.info("NEW STEPINTOCDSI:    " + rStep.getValidationDetections());
+    logger.info("LEGACY LONESTAR: " + rLegacy.getValidationDetections());
+    logger.info("NEW LONESTAR: " + rLonestar.getValidationDetections());
 
-    assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
-    assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
+    assertEquals("passed flag should match", rLonestar.isRulePassed(), rStep.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rStep));
   }
 
   @Test
@@ -135,14 +144,16 @@ public class VaccineEvaluationComparisonTester {
     List<MqeVaccination> vaccinations = createWrongPatientVaccinations();
     mr.setVaccinations(vaccinations);
 
-    ValidationRuleResult rNew = newRule.executeRule(p, mr);
+    ValidationRuleResult rStep = stepRule.executeRule(p, mr);
+    ValidationRuleResult rLonestar = newLonestarRule.executeRule(p, mr);
     ValidationRuleResult rLegacy = legacyRule.executeRule(p, mr);
 
-    logger.info("NEW:    " + rNew.getValidationDetections());
-    logger.info("LEGACY: " + rLegacy.getValidationDetections());
+    logger.info("NEW STEPINTOCDSI:    " + rStep.getValidationDetections());
+    logger.info("LEGACY LONESTAR: " + rLegacy.getValidationDetections());
+    logger.info("NEW LONESTAR: " + rLonestar.getValidationDetections());
 
-    assertEquals("passed flag should match", rLegacy.isRulePassed(), rNew.isRulePassed());
-    assertEquals("detection sets should match", detectionKeySet(rLegacy), detectionKeySet(rNew));
+    assertEquals("passed flag should match", rLonestar.isRulePassed(), rStep.isRulePassed());
+    assertEquals("detection sets should match", detectionKeySet(rLonestar), detectionKeySet(rStep));
   }
 
   private Set<String> detectionKeySet(ValidationRuleResult r) {
@@ -176,12 +187,14 @@ public class VaccineEvaluationComparisonTester {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.YEAR, -10);
 
+    // birth
     p.setBirthDate(cal.getTime());
     List<MqeVaccination> vaccinations = new ArrayList<>();
     if (allVaccines) {
       addVaccination("08", vaccinations, cal); // Hep B at Birth
     }
 
+    // 2 months
     cal.add(Calendar.MONTH, 2);
     if (allVaccines) {
       addVaccination("122", vaccinations, cal); // Rotavirus
@@ -192,44 +205,51 @@ public class VaccineEvaluationComparisonTester {
       addVaccination("133", vaccinations, cal); // PCV13
     }
 
+    // 4 months
     cal.add(Calendar.MONTH, 2);
     if (allVaccines) {
-      addVaccination("122", vaccinations, cal);
-      addVaccination("20", vaccinations, cal);
-      addVaccination("10", vaccinations, cal);
-      addVaccination("17", vaccinations, cal);
-      addVaccination("08", vaccinations, cal);
-      addVaccination("133", vaccinations, cal);
+      addVaccination("122", vaccinations, cal); // Rotavirus
+      addVaccination("20", vaccinations, cal); // DTaP
+      addVaccination("10", vaccinations, cal); // IPV
+      addVaccination("17", vaccinations, cal); // Hib
+      addVaccination("08", vaccinations, cal); // Hep B
+      addVaccination("133", vaccinations, cal); // PCV13
     }
 
+    // 6 months
     cal.add(Calendar.MONTH, 2);
     if (allVaccines) {
-      addVaccination("122", vaccinations, cal);
-      addVaccination("20", vaccinations, cal);
-      addVaccination("10", vaccinations, cal);
-      addVaccination("17", vaccinations, cal);
-      addVaccination("08", vaccinations, cal);
-      addVaccination("133", vaccinations, cal);
+      addVaccination("122", vaccinations, cal); // Rotavirus
+      addVaccination("20", vaccinations, cal); // DTaP
+      addVaccination("10", vaccinations, cal); // IPV
+      addVaccination("17", vaccinations, cal); // Hib
+      addVaccination("08", vaccinations, cal); // Hep B
+      addVaccination("133", vaccinations, cal); // PCV13
     }
 
+    // 12 months
     cal.add(Calendar.MONTH, 6);
     addVaccination("133", vaccinations, cal); // PCV13
     addVaccination("94", vaccinations, cal); // MMRV
     addVaccination("83", vaccinations, cal); // Hep A
 
+    // 15 months
     cal.add(Calendar.MONTH, 3);
     addVaccination("20", vaccinations, cal); // DTaP
     addVaccination("10", vaccinations, cal); // IPV
     addVaccination("17", vaccinations, cal); // Hib
     addVaccination("08", vaccinations, cal); // Hep B
 
+    // 18 months
     cal.add(Calendar.MONTH, 3);
     addVaccination("83", vaccinations, cal); // Hep A
 
+    // 23 months
     cal.add(Calendar.MONTH, 5);
     addVaccination("20", vaccinations, cal); // DTaP
     addVaccination("10", vaccinations, cal); // IPV
 
+    // 47 months
     cal.add(Calendar.MONTH, 24);
     addVaccination("20", vaccinations, cal); // DTaP
     return vaccinations;
