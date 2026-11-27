@@ -23,11 +23,11 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
 
 @ValidationRuleEntry(TargetType.Patient)
-public class VaccineEvaluation extends AbstractVaccineEvaluation<ForecastInput, DataModel, VaccineGroupForecast> {
+public class VaccineEvaluationStepIntoCDSi extends AbstractVaccineEvaluation<ForecastInput, DataModel, VaccineGroupForecast> {
 
   public static final String SUPPORTING_DATA_SET = "USA-DEMO-HPV9-0.1.zip";
 
-  public VaccineEvaluation() {
+  public VaccineEvaluationStepIntoCDSi() {
     super();
   }
 

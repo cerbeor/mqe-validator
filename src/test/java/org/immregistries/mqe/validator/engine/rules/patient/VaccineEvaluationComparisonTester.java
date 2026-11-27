@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Compares the detection output of {@link VaccineEvaluation} (new, StepIntoCDSI-based path) against
+ * Compares the detection output of {@link VaccineEvaluationStepIntoCDSi} (new, StepIntoCDSI-based path) against
  * {@link VaccineEvaluationLonestar} (original lonestar-based path) for the same input, to ensure the
  * refactor did not change behavior.
  */
@@ -29,7 +29,7 @@ public class VaccineEvaluationComparisonTester {
   private static final Logger logger =
       LoggerFactory.getLogger(VaccineEvaluationComparisonTester.class);
 
-  private VaccineEvaluation stepRule = new VaccineEvaluation();
+  private VaccineEvaluationStepIntoCDSi stepRule = new VaccineEvaluationStepIntoCDSi();
   private VaccineEvaluationLonestar newLonestarRule = new VaccineEvaluationLonestar();
   private VaccineEvaluationLegacy legacyRule = new VaccineEvaluationLegacy();
 

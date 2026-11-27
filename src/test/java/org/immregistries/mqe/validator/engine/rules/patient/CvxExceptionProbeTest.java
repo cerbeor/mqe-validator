@@ -14,7 +14,7 @@ import org.immregistries.mqe.vxu.MqeVaccination;
 import org.junit.Test;
 
 /**
- * Checks whether CVX codes trigger exceptions when fed as input to {@link VaccineEvaluation}.
+ * Checks whether CVX codes trigger exceptions when fed as input to {@link VaccineEvaluationStepIntoCDSi}.
  *
  * CVX codes known to make the underlying CDSI engine throw
  * "Unrecognized cvx code" (caught internally by VaccineEvaluation) are kept in a separate
@@ -60,7 +60,7 @@ public class CvxExceptionProbeTest {
   public void problematicCvxDoesNotThrow() {
     for (String cvx : PROBLEMATIC_CVX_LIST) {
       MqeMessageReceived mr = buildMessage(cvx);
-      VaccineEvaluation rule = new VaccineEvaluation();
+      VaccineEvaluationStepIntoCDSi rule = new VaccineEvaluationStepIntoCDSi();
       try {
         ValidationRuleResult r = rule.executeRule(mr.getPatient(), mr);
         assertNotNull("rule result should not be null for CVX " + cvx, r);
@@ -77,7 +77,7 @@ public class CvxExceptionProbeTest {
   public void okCvxDoesNotThrow() {
     for (String cvx : OK_CVX_LIST) {
       MqeMessageReceived mr = buildMessage(cvx);
-      VaccineEvaluation rule = new VaccineEvaluation();
+      VaccineEvaluationStepIntoCDSi rule = new VaccineEvaluationStepIntoCDSi();
       try {
         ValidationRuleResult r = rule.executeRule(mr.getPatient(), mr);
         assertNotNull("rule result should not be null for CVX " + cvx, r);
@@ -108,7 +108,7 @@ public class CvxExceptionProbeTest {
       vs.add(v);
     }
     mr.setVaccinations(vs);
-    VaccineEvaluation rule = new VaccineEvaluation();
+    VaccineEvaluationStepIntoCDSi rule = new VaccineEvaluationStepIntoCDSi();
     try {
       ValidationRuleResult r = rule.executeRule(p, mr);
       assertNotNull(r);

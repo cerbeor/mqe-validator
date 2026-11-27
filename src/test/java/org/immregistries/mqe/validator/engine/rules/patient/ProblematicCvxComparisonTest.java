@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Compares the behavior of {@link VaccineEvaluation} (new, STEP-based) against
+ * Compares the behavior of {@link VaccineEvaluationStepIntoCDSi} (new, STEP-based) against
  * {@link VaccineEvaluationLonestar} (legacy, lonestar-based) when fed CVX codes that are known to
  * trigger internal "Unrecognized cvx code" exceptions in the new path.
  *
@@ -45,7 +45,7 @@ public class ProblematicCvxComparisonTest {
       MqeMessageReceived mrNew = buildMessage(cvx);
       MqeMessageReceived mrLegacy = buildMessage(cvx);
 
-      VaccineEvaluation newRule = new VaccineEvaluation();
+      VaccineEvaluationStepIntoCDSi newRule = new VaccineEvaluationStepIntoCDSi();
       VaccineEvaluationLonestar legacyRule = new VaccineEvaluationLonestar();
 
       ValidationRuleResult rNew = null;
@@ -85,7 +85,7 @@ public class ProblematicCvxComparisonTest {
       MqeMessageReceived mrNew = buildMessage(cvx);
       MqeMessageReceived mrLegacy = buildMessage(cvx);
 
-      VaccineEvaluation newRule = new VaccineEvaluation();
+      VaccineEvaluationStepIntoCDSi newRule = new VaccineEvaluationStepIntoCDSi();
       VaccineEvaluationLonestar legacyRule = new VaccineEvaluationLonestar();
 
       boolean newThrew = false;
@@ -118,7 +118,7 @@ public class ProblematicCvxComparisonTest {
     MqeMessageReceived mrNew = buildMessage(NOT_A_CVX);
     MqeMessageReceived mrLegacy = buildMessage(NOT_A_CVX);
 
-    VaccineEvaluation newRule = new VaccineEvaluation();
+    VaccineEvaluationStepIntoCDSi newRule = new VaccineEvaluationStepIntoCDSi();
     VaccineEvaluationLonestar legacyRule = new VaccineEvaluationLonestar();
 
     ValidationRuleResult rNew = newRule.executeRule(mrNew.getPatient(), mrNew);
