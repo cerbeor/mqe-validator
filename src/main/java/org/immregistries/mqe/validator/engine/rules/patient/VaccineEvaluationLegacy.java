@@ -24,7 +24,7 @@ import org.joda.time.DateTime;
 
 
 @ValidationRuleEntry(TargetType.Patient)
-public class VaccineEvaluationLegacy extends  AbstractVaccineEvaluation<VaccineEvaluationLegacy.ForecastInput, ForecastHandlerCore, ImmunizationForecastDataBean> {
+public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluationLegacy.ForecastInput, ForecastHandlerCore, ImmunizationForecastDataBean> {
 
     public VaccineEvaluationLegacy() {
         super();
@@ -82,7 +82,7 @@ public class VaccineEvaluationLegacy extends  AbstractVaccineEvaluation<VaccineE
         return forecastInput;
     }
 
-    protected AbstractVaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(ForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception {
+    protected VaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(ForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception {
         ForecastHandlerCore forecastHandlerCore = ForecastManagerSingleton.getForecastManagerSingleton().getForecastHandlerCore();
         Map<String, List<Trace>> traceMap = new HashMap<String, List<Trace>>();
         forecastHandlerCore.forecast(forecastInput.doseList, forecastInput.patient,

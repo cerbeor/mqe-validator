@@ -18,14 +18,14 @@ import java.util.*;
 
 
 @ValidationRuleEntry(TargetType.Patient)
-public abstract class AbstractVaccineEvaluation<GenericForecastInput, GenericForecastHandlerCore, ImmunizationForecastDataBean> extends ValidationRule<MqePatient> {
+public abstract class VaccineEvaluation<GenericForecastInput, GenericForecastHandlerCore, ImmunizationForecastDataBean> extends ValidationRule<MqePatient> {
 
     public static final int MONTHS_0 = 0;
     public static final int MONTHS_24 = 25;
     public static final int MONTHS_18 = 19;
     public static final int MONTHS_15 = 16;
 
-    public AbstractVaccineEvaluation() {
+    public VaccineEvaluation() {
 
         this.addRuleDetection(Detection.VaccineEvaluationAt18MonthsHepb3);
         {
@@ -377,7 +377,7 @@ public abstract class AbstractVaccineEvaluation<GenericForecastInput, GenericFor
 
     abstract @NonNull GenericForecastInput createForecasterInput(MqePatient target, MqeMessageReceived m, Map<String, CvxCode> cvxToVaccineIdMap, DateTime age);
 
-    abstract AbstractVaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(GenericForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception;
+    abstract VaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(GenericForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception;
 
     public static class CountEvalMapAndInvalidDoseCount {
         public final int invalidDoseCount;

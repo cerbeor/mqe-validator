@@ -2,7 +2,6 @@ package org.immregistries.mqe.validator.engine.rules.patient;
 
 import java.util.*;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.immregistries.lonestar.ForecastManagerSingleton;
 import org.immregistries.lonestar.core.ImmunizationForecastDataBean;
 import org.immregistries.lonestar.core.ImmunizationInterface;
@@ -22,7 +21,7 @@ public class VaccineEvaluationLonestar extends VaccineEvaluationLegacy {
     }
 
     @Override
-    protected AbstractVaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(VaccineEvaluationLonestar.ForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception {
+    protected VaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(VaccineEvaluationLonestar.ForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception {
         ForecastHandlerCore forecastHandlerCore = ForecastManagerSingleton.getForecastManagerSingleton().getForecastHandlerCore();
         int invalidDoseCount = 0;
         Map<String, List<Trace>> traceMap = new HashMap<String, List<Trace>>();

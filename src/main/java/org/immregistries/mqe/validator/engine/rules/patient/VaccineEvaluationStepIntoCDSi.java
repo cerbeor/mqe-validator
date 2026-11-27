@@ -23,7 +23,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
 
 @ValidationRuleEntry(TargetType.Patient)
-public class VaccineEvaluationStepIntoCDSi extends AbstractVaccineEvaluation<ForecastInput, DataModel, VaccineGroupForecast> {
+public class VaccineEvaluationStepIntoCDSi extends VaccineEvaluation<ForecastInput, DataModel, VaccineGroupForecast> {
 
   public static final String SUPPORTING_DATA_SET = "USA-DEMO-HPV9-0.1.zip";
 
@@ -101,7 +101,7 @@ public class VaccineEvaluationStepIntoCDSi extends AbstractVaccineEvaluation<For
   }
 
   @Override
-  protected AbstractVaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(ForecastInput forecastInput, List<VaccineGroupForecast> resultList, DateTime birthDate) throws Exception {
+  protected VaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(ForecastInput forecastInput, List<VaccineGroupForecast> resultList, DateTime birthDate) throws Exception {
       DataModel dataModel = executeForecasting(forecastInput);
       int invalidDoseCount = 0;
       HashMap<Integer, Map<String, Integer>> countEvalMapList = new HashMap<>();
