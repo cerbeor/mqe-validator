@@ -55,6 +55,7 @@ public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluation
         }
     }
 
+    @Override
     protected @NonNull List<ImmunizationForecastDataBean> getImmunizationForecastDataBeans(ForecastInput forecastInput) throws Exception {
         ForecastHandlerCore forecastHandlerCore = ForecastManagerSingleton.getForecastManagerSingleton().getForecastHandlerCore();
         List<ImmunizationForecastDataBean> resultList =
@@ -66,6 +67,7 @@ public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluation
         return resultList;
     }
 
+    @Override
     protected @NonNull ForecastInput createForecasterInput(MqePatient target, MqeMessageReceived m, Map<String, CvxCode> cvxToVaccineIdMap, DateTime age) {
         ForecastInput forecastInput = new ForecastInput();
 
@@ -107,6 +109,7 @@ public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluation
         return forecastInput;
     }
 
+    @Override
     protected VaccineEvaluation.CountEvalMapAndInvalidDoseCount executeForecasterGetCountEvalMapAndInvalidDoseCount(ForecastInput forecastInput, List<ImmunizationForecastDataBean> resultList, DateTime birthDate) throws Exception {
         ForecastHandlerCore forecastHandlerCore = ForecastManagerSingleton.getForecastManagerSingleton().getForecastHandlerCore();
         Map<String, List<Trace>> traceMap = new HashMap<String, List<Trace>>();
@@ -142,6 +145,7 @@ public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluation
         return result;
     }
 
+    @Override
     protected void fillIssues(MqePatient target, ImmunizationForecastDataBean forecast, List<ValidationReport> issues) {
         String statusDescriptionExternal = forecast.getStatusDescriptionExternal();
         String forecastLabel = forecast.getForecastLabel();
