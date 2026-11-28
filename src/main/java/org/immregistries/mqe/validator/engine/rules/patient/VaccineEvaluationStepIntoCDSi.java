@@ -101,7 +101,7 @@ public class VaccineEvaluationStepIntoCDSi extends VaccineEvaluation<ForecastInp
           } else {
             cvxCode = cvxToVaccineIdMap.get("0" + vaccineCvx);
           }
-          if (cvxCode != null) {
+          if (cvxCode != null && (age == null || adminDate.isBefore(age))) {
             ForecastInput.VaccinationInput vaccinationInput  = forecastInput.addVaccination();
             vaccinationInput.setVaccineCvx(cvxCode.getCvxCode());
             vaccinationInput.setDateAdministered(adminDate.toDate());
