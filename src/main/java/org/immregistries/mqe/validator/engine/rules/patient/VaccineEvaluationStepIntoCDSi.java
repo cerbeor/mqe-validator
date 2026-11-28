@@ -110,16 +110,11 @@ public class VaccineEvaluationStepIntoCDSi extends VaccineEvaluation<ForecastInp
           }
         }
       }
-      if (age != null) {
-        try {
-          forecastInput.setAssessmentDate(age.toDate());
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      } else {
-        forecastInput.setAssessmentDate(new Date());
-
-      }
+    }
+    if (age != null) {
+      forecastInput.setAssessmentDate(age.toDate());
+    } else {
+      forecastInput.setAssessmentDate(new Date());
     }
     return forecastInput;
   }
