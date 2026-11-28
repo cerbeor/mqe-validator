@@ -45,15 +45,20 @@ public class RulePairBuilderTest {
             .addUrls(ClasspathHelper.forClass(ValidationRule.class))
             .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(PACKAGE))));
 
-    Set<Class<? extends ValidationRule>> allPackageRules = reflections.getSubTypesOf(ValidationRule.class);
-    return allPackageRules;
+    // Abstract base classes (e.g. VaccineEvaluation) are not rules themselves
+    return reflections.getSubTypesOf(ValidationRule.class).stream()
+            .filter(clazz -> !java.lang.reflect.Modifier.isAbstract(clazz.getModifiers()))
+            .collect(java.util.stream.Collectors.toSet());
   }
 
   @Test
   public void allPatientRulesInPackageAreAnnotatedCorrectlyAndAddedToValidationRuleEntityLists() {
     String pkg = RULE_PACKAGE + ".engine.rules.patient";
     Set<Class<? extends ValidationRule>> classes = getValidationRulesInPackage(pkg);
-    int numberOfPatientRulesInPackage = classes.size();
+    // Inactive rules (e.g. VaccineEvaluationLegacy / VaccineEvaluationLonestar) are not added to the lists
+    int numberOfPatientRulesInPackage = (int) classes.stream()
+            .filter(clazz -> clazz.getAnnotation(ValidationRuleEntry.class) == null || clazz.getAnnotation(ValidationRuleEntry.class).active())
+            .count();
     boolean allAreAnnotatedCorrectly = classes.stream().allMatch((clazz) -> clazz.getAnnotation(ValidationRuleEntry.class).value().equals(TargetType.Patient));
     Set<ValidationRule> PATIENT_RULES = ValidationRuleEntityLists.PATIENT_RULES.getRules();
     assertEquals("All rules in package " + pkg + " are added to ValidationRuleEntityLists.PATIENT_RULES", PATIENT_RULES.size(), numberOfPatientRulesInPackage);

@@ -13,7 +13,8 @@ import org.immregistries.mqe.vxu.TargetType;
 import org.joda.time.DateTime;
 
 
-@ValidationRuleEntry(TargetType.Patient)
+// Not active by default: VaccineEvaluationStepIntoCDSi is the default vaccine evaluation rule.
+@ValidationRuleEntry(value = TargetType.Patient, active = false)
 public class VaccineEvaluationLonestar extends VaccineEvaluationLegacy {
 
     public VaccineEvaluationLonestar() {

@@ -93,7 +93,7 @@
 - **Message shown to submitters:** General vaccine coverage at 24 months for series 4:3:1:3:3:1:4
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ## Vaccine Coverage At 36 Months
 
@@ -105,7 +105,7 @@
 - **Message shown to submitters:** General vaccine coverage at 36 months for series 4:3:1:3:3:1:4
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ## Vaccine Evaluation
 
@@ -117,7 +117,7 @@
 - **Message shown to submitters:** General vaccine evaluation with only 1 valid HepB dose
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationHasInvalidDoses1orMore` — MQE0778
 
@@ -127,7 +127,7 @@
 - **Message shown to submitters:** General vaccine evaluation with 1 or more invalid doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationHasInvalidDoses2orMore` — MQE0779
 
@@ -137,7 +137,7 @@
 - **Message shown to submitters:** General vaccine evaluation with 2 or more invalid doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationHasInvalidDoses3orMore` — MQE0780
 
@@ -147,7 +147,7 @@
 - **Message shown to submitters:** General vaccine evaluation with 3 or more invalid doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationHasInvalidDoses4orMore` — MQE0781
 
@@ -157,7 +157,7 @@
 - **Message shown to submitters:** General vaccine evaluation with 4 or more invalid doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationHasInvalidDoses5orMore` — MQE0782
 
@@ -167,7 +167,7 @@
 - **Message shown to submitters:** General vaccine evaluation with 5 or more invalid doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationHasInvalidDoses10orMore` — MQE0783
 
@@ -177,7 +177,7 @@
 - **Message shown to submitters:** General vaccine evaluation with 10 or more invalid doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ## Vaccine Evaluation At 15 Months
 
@@ -189,7 +189,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 15 months with 4 valid PCV doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt15MonthsPolio3` — MQE0755
 
@@ -199,7 +199,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 15 months with 3 valid IPV doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt15MonthsMmr1` — MQE0756
 
@@ -209,7 +209,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 15 months with 1 valid MMR dose
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt15MonthsVar1` — MQE0757
 
@@ -219,7 +219,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 15 months with 1 valid Varicella doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt15MonthsHib2` — MQE0759
 
@@ -229,7 +229,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 15 months with 2 valid Hib Doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ## Vaccine Evaluation At 18 Months
 
@@ -241,7 +241,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 18 months with 3 valid HepB doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt18MonthsDtap4` — MQE0753
 
@@ -251,7 +251,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 18 months with 4 valid DTaP doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt18MonthsHepa2` — MQE0758
 
@@ -261,7 +261,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 18 months with 2 valid HepA doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ## Vaccine Evaluation At 24 Months
 
@@ -273,7 +273,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 4 valid DTaP doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsPolio3` — MQE0761
 
@@ -283,7 +283,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 3 valid IPV doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsMmr1` — MQE0762
 
@@ -293,7 +293,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 1 valid MMR dose
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsHib3` — MQE0763
 
@@ -303,7 +303,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 3 valid Hib Doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsHepa2` — MQE0769
 
@@ -313,7 +313,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 2 valid HepA doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsHepb3` — MQE0764
 
@@ -323,7 +323,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 3 valid HepB doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsVar1` — MQE0765
 
@@ -333,7 +333,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 1 valid Varicella doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineEvaluationAt24MonthsPcv4` — MQE0766
 
@@ -343,7 +343,7 @@
 - **Message shown to submitters:** General vaccine evaluation at 24 months with 4 valid PCV doses
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ## Vaccine Forecast At 24 Months
 
@@ -355,7 +355,7 @@
 - **Message shown to submitters:** General vaccine forecast at 24 months Hib
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineForecastAt24MonthsPcvComplete` — MQE0775
 
@@ -365,7 +365,7 @@
 - **Message shown to submitters:** General vaccine forecast at 24 months PCV
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineForecastAt24MonthsRotaComplete` — MQE0776
 
@@ -375,7 +375,7 @@
 - **Message shown to submitters:** General vaccine forecast at 24 months Rotavirus
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
 ### `VaccineForecastAt24MonthsHepbComplete` — MQE0777
 
@@ -385,5 +385,5 @@
 - **Message shown to submitters:** General vaccine forecast at 24 months Hep B
 - **What this means:** _not yet documented - add `@Documentation("...")` on this constant in Detection.java_
 - **Implemented by:**
-  - `VaccineEvaluation`
+  - `VaccineEvaluationStepIntoCDSi`
 
