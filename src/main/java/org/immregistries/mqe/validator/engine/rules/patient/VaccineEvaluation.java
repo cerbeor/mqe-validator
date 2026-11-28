@@ -270,58 +270,58 @@ public abstract class VaccineEvaluation<GenericForecastInput, GenericForecastHan
 
                     Map<String, Integer> countEvalMap = result.countEvalMapList.get(month);
                     if (month == MONTHS_0) {
-                        if (countEvalMap.getOrDefault("HepB", 0) == 1) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HEPB), 0) == 1) {
                             detectionSet.add(Detection.VaccineEvaluationHepb1Only);
                         }
                     } else if (month == MONTHS_15) {
-                        if (countEvalMap.getOrDefault("Pneumo", 0) >= 4) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.PNEUMOCOCCAL), 0) >= 4) {
                             detectionSet.add(Detection.VaccineEvaluationAt15MonthsPcv4);
                         }
-                        if (countEvalMap.getOrDefault("Polio", 0) >= 3) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.POLIO), 0) >= 3) {
                             detectionSet.add(Detection.VaccineEvaluationAt15MonthsPolio3);
                         }
-                        if (countEvalMap.getOrDefault("Measles", 0) >= 1) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.MEASLES), 0) >= 1) {
                             detectionSet.add(Detection.VaccineEvaluationAt15MonthsMmr1);
                         }
-                        if (countEvalMap.getOrDefault("Varicella", 0) >= 1) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.VARICELLA), 0) >= 1) {
                             detectionSet.add(Detection.VaccineEvaluationAt15MonthsVar1);
                         }
-                        if (countEvalMap.getOrDefault("Hib", 0) >= 2) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HIB), 0) >= 2) {
                             detectionSet.add(Detection.VaccineEvaluationAt15MonthsHib2);
                         }
                     } else if (month == MONTHS_18) {
-                        if (countEvalMap.getOrDefault("HepB", 0) >= 3) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HEPB), 0) >= 3) {
                             detectionSet.add(Detection.VaccineEvaluationAt18MonthsHepb3);
                         }
-                        if (countEvalMap.getOrDefault("Diphtheria", 0) >= 4) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.DIPHTHERIA), 0) >= 4) {
                             detectionSet.add(Detection.VaccineEvaluationAt18MonthsDtap4);
                         }
-                        if (countEvalMap.getOrDefault("HepA", 0) >= 2) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HEPA), 0) >= 2) {
                             detectionSet.add(Detection.VaccineEvaluationAt18MonthsHepa2);
                         }
                     } else if (month == MONTHS_24) {
-                        if (countEvalMap.getOrDefault("Diphtheria", 0) >= 4) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.DIPHTHERIA), 0) >= 4) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsDtap4);
                         }
-                        if (countEvalMap.getOrDefault("Polio", 0) >= 3) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.POLIO), 0) >= 3) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsPolio3);
                         }
-                        if (countEvalMap.getOrDefault("Measles", 0) >= 1) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.MEASLES), 0) >= 1) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsMmr1);
                         }
-                        if (countEvalMap.getOrDefault("Hib", 0) >= 3) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HIB), 0) >= 3) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsHib3);
                         }
-                        if (countEvalMap.getOrDefault("HepB", 0) >= 3) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HEPB), 0) >= 3) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsHepb3);
                         }
-                        if (countEvalMap.getOrDefault("HepA", 0) >= 2) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.HEPA), 0) >= 2) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsHepa2);
                         }
-                        if (countEvalMap.getOrDefault("Varicella", 0) >= 1) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.VARICELLA), 0) >= 1) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsVar1);
                         }
-                        if (countEvalMap.getOrDefault("Pneumo", 0) >= 4) {
+                        if (countEvalMap.getOrDefault(getDiseaseLabel(Disease.PNEUMOCOCCAL), 0) >= 4) {
                             detectionSet.add(Detection.VaccineEvaluationAt24MonthsPcv4);
                         }
                     }
@@ -365,6 +365,20 @@ public abstract class VaccineEvaluation<GenericForecastInput, GenericForecastHan
 
         return buildResults(issues, passed);
     }
+
+    /**
+     * Diseases counted by the evaluation. Each forecaster names them differently, so subclasses map
+     * them to the label their engine uses.
+     */
+    public enum Disease {
+        HEPB, HEPA, PNEUMOCOCCAL, POLIO, MEASLES, VARICELLA, HIB, DIPHTHERIA
+    }
+
+    /**
+     * @return the label the underlying forecaster uses for the given disease, as found in the count
+     * map built by {@link #executeForecasterGetCountEvalMapAndInvalidDoseCount}.
+     */
+    abstract String getDiseaseLabel(Disease disease);
 
     abstract void fillIssues(MqePatient target, ImmunizationForecastDataBean forecast, List<ValidationReport> issues);
 

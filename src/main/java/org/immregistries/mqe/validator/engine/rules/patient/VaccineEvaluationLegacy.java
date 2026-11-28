@@ -31,6 +31,30 @@ public class VaccineEvaluationLegacy extends VaccineEvaluation<VaccineEvaluation
         super();
     }
 
+    @Override
+    String getDiseaseLabel(Disease disease) {
+        switch (disease) {
+            case HEPB:
+                return "HepB";
+            case HEPA:
+                return "HepA";
+            case POLIO:
+                return "Polio";
+            case MEASLES:
+                return "Measles";
+            case VARICELLA:
+                return "Varicella";
+            case HIB:
+                return "Hib";
+            case DIPHTHERIA:
+                return "Diphtheria";
+            case PNEUMOCOCCAL:
+                return "Pneumo";
+            default:
+                throw new IllegalArgumentException("No label for disease " + disease);
+        }
+    }
+
     protected @NonNull List<ImmunizationForecastDataBean> getImmunizationForecastDataBeans(ForecastInput forecastInput) throws Exception {
         ForecastHandlerCore forecastHandlerCore = ForecastManagerSingleton.getForecastManagerSingleton().getForecastHandlerCore();
         List<ImmunizationForecastDataBean> resultList =

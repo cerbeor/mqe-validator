@@ -32,6 +32,30 @@ public class VaccineEvaluationStepIntoCDSi extends VaccineEvaluation<ForecastInp
   }
 
   @Override
+  String getDiseaseLabel(Disease disease) {
+    switch (disease) {
+      case HEPB:
+        return "HepB";
+      case HEPA:
+        return "HepA";
+      case POLIO:
+        return "Polio";
+      case MEASLES:
+        return "Measles";
+      case VARICELLA:
+        return "Varicella";
+      case HIB:
+        return "Hib";
+      case DIPHTHERIA:
+        return "Diphtheria";
+      case PNEUMOCOCCAL:
+        return "Pneumococcal";
+      default:
+        throw new IllegalArgumentException("No label for disease " + disease);
+    }
+  }
+
+  @Override
   void fillIssues(MqePatient target, VaccineGroupForecast forecast, List<ValidationReport> issues) {
     String forecastLabel = forecast.getVaccineGroup().getName();
     if (forecast.getVaccineGroupStatus().equals(VaccineGroupStatus.COMPLETE)) {
